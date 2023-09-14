@@ -9,8 +9,8 @@ servo_pin = 18  # Change this to your GPIO pin
 min_pulse_width = 1000
 max_pulse_width = 2000
 
-GO_TO_LEFT = min_pulse_width + 100
-GO_TO_RIGHT = max_pulse_width
+GO_TO_LEFT = min_pulse_width + 250
+GO_TO_RIGHT = max_pulse_width - 100
 STOP = (max_pulse_width + min_pulse_width) // 2
 
 last_angle = open('last_known_angle.txt', 'r')

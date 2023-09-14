@@ -18,8 +18,8 @@ current_angle = 90
 writer = ''
 
 # defining constant values
-GO_TO_LEFT = min_pulse_width + 400
-GO_TO_RIGHT = max_pulse_width - 440
+GO_TO_LEFT = min_pulse_width + 100
+GO_TO_RIGHT = max_pulse_width - 100
 STOP = (max_pulse_width + min_pulse_width) // 2
 MAX_RIGHT = 120
 MAX_LEFT = 60
@@ -31,7 +31,7 @@ def track_face(point):
     if point >= 1 and point <= 2 and current_angle >= MAX_LEFT:
         # to left
         pi.set_servo_pulsewidth(servo_pin, GO_TO_LEFT)
-        pi.set_servo_pulsewidth(servo_pin1, GO_T0_LEFT)
+        pi.set_servo_pulsewidth(servo_pin1, GO_TO_LEFT)
         pi.set_servo_pulsewidth(servo_pin2, GO_TO_LEFT)
         sleep(.07)
         current_angle -= .5
@@ -40,8 +40,8 @@ def track_face(point):
     if point >= 6 and point <= 10 and current_angle <= MAX_RIGHT:
         # to right
         pi.set_servo_pulsewidth(servo_pin, GO_TO_RIGHT)
-        pi.set_servo_pulsewidth(servo_pin1, GO_TO_RIGHT)
-        pi.set_servo_pulsewidth(servo_pin2, GO_TO_RIGHT)
+#         pi.set_servo_pulsewidth(servo_pin1, GO_TO_RIGHT)
+#         pi.set_servo_pulsewidth(servo_pin2, GO_TO_RIGHT)
         sleep(.05)
         current_angle += .5
     
@@ -73,11 +73,11 @@ def detect_face(frame):
     # stop the servo
     writer.write(str(current_angle))
     pi.set_servo_pulsewidth(servo_pin, STOP)
-    pi.set_servo_pulsewidth(servo_pin1, STOP)
-    pi.set_servo_pulsewidth(servo_pin2, STOP)
-    
+#     pi.set_servo_pulsewidth(servo_pin1, STOP)
+#     pi.set_servo_pulsewidth(servo_pin2, STOP)
+
     sleep(.05)
-    return frame    
+#     return frame    
 
 
 def start(queue):
@@ -100,8 +100,8 @@ def start(queue):
             
         frame = cv2.resize(frame, (640, 480))
         frame = cv2.flip(frame, 1)
-        frame = detect_face(frame)
-        cv2.imshow(' ', frame)        
+        detect_face(frame)
+#         cv2.imshow(' ', frame)        
         if cv2.waitKey(1) == ord('q'):
             break
     

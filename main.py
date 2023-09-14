@@ -1,6 +1,7 @@
 import calibration_test
 import face_detection
 import play_emotion as emotions
+import hands_movements as hands
 import cv2
 import face_recognition_train
 import face_recognition_test
@@ -11,12 +12,15 @@ calibration_test.calibrate()
 
 detection_queue = Queue()
 emotion_queue = Queue()
+# hands_queue = Queue()
 
 process_display_emotion = Process(target=emotions.display_emotion, args=(emotion_queue,))
 process_face_detection = Process(target=face_detection.start, args=(detection_queue,))
+# process_hands = Process(target=hands.start, args=(hands_queue,))
 
 process_display_emotion.start()
 process_face_detection.start()
+# process_hands.start()
 
 
 def kill_process():

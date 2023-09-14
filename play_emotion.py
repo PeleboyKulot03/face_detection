@@ -2,6 +2,9 @@ from multiprocessing import Process, Queue
 import cv2
 import numpy as np
 import time
+import hands_movements as hands
+from multiprocessing import Process
+
 
 # path to the video emotions
 file_names = [
@@ -42,23 +45,39 @@ def change_emotion(emotion):
     
 
 # function to display the emotion in the screen
-def display_emotion(queue):    
+def display_emotion(queue):
+    emotion_change = False
+    process_hands = Process(target=hands.start)
     cv2.namedWindow(' ', cv2.WINDOW_NORMAL)
     cv2.setWindowProperty(' ',cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     
-    current_emotion = change_emotion("happy")
+    current_emotion = change_emotion("idle")
     
     while True:
         has_frame,frame = current_emotion.read()
         
         if not has_frame:
+            if emotion_change:
+                current_emotion.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                current_emotion = change_emotion('idle')
+                emotion_change = False
+
             if not queue.empty():
                 emotion = queue.get()
+                if process_hands.is_alive():
+                    process_hands.join()
+                    
                 if emotion == "stop":
                     break
                 
                 current_emotion.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 current_emotion = change_emotion(emotion)
+                process_hands = Process(target=hands.start, args=(emotion,))
+                process_hands.start()
+                emotion_change = True
+                
+                
+                
                 continue
             
             current_emotion.set(cv2.CAP_PROP_POS_FRAMES, 0)
